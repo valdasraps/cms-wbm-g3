@@ -1,0 +1,12 @@
+[
+    {
+        "id": "firstPage",
+        "title": "First page",
+        "page": {
+            "control": "SingleRun",
+            "portlets": [
+                "module1", "module2"
+            ]
+        }
+    }
+]

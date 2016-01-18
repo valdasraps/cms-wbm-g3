@@ -1,0 +1,21 @@
+{
+  "name": "angular-seed",
+  "description": "A starter project for AngularJS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/angular/angular-seed",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-loader": "~1.4.0",
+    "angular-mocks": "~1.4.0",
+    "html5-boilerplate": "~5.2.0",
+    "golden-layout": "https://github.com/valdasraps/golden-layout.git",
+    "requirejs": "~2.1.22",
+    "oclazyload": "~1.0.9",
+    "angular-bootstrap": "~1.0.3",
+    "bootstrap": "~3.3.6",
+    "angular-local-storage": "~0.2.3"
+  }
+}

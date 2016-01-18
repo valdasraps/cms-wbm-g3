@@ -1,0 +1,191 @@
+[
+    {
+        "id": "indexPage",
+        "title": "Index page",
+        "page": {
+            "control": "SingleRun",
+            "content": {
+                "type": "row",
+                "content":
+                        [{
+                                "type": "column",
+                                "width": 20,
+                                "content":
+                                        [{
+                                                "type": "component",
+                                                "componentName": "portlet",
+                                                "componentState": {
+                                                    "portlet": "module1"
+                                                }
+                                            },
+                                            {
+                                                "type": "component",
+                                                "componentName": "portlet",
+                                                "componentState": {
+                                                    "portlet": "module2"
+                                                }
+                                            }]
+                            },
+                            {
+                                "type": "component",
+                                "componentName": "portlet",
+                                "componentState": {
+                                    "portlet": "module2"
+                                }
+                            }]
+            }
+        }
+    },
+    {
+        "id": "runSummary",
+        "title": "Run Summary",
+        "page": {
+            "control": "SingleRun",
+            "content": {
+                "type": "row",
+                "content":
+                        [{
+                                "type": "stack",
+                                "width": 50,
+                                "content":
+                                        [{
+                                                "type": "component",
+                                                "componentName": "portlet",
+                                                "componentState": {
+                                                    "portlet": "module1"
+                                                }
+                                            },
+                                            {
+                                                "type": "component",
+                                                "componentName": "portlet",
+                                                "componentState": {
+                                                    "portlet": "module2"
+                                                }
+                                            }]
+                            },
+                            {
+                                "type": "component",
+                                "componentName": "portlet",
+                                "componentState": {
+                                    "portlet": "module2"
+                                }
+                            }]
+            }
+        }
+    },
+    {
+        "id": "Folder1",
+        "title": "Folder1",
+        "page": {
+            "control": "SingleRun",
+            "content": {
+                "type": "component",
+                "componentName": "portlet",
+                "componentState": {
+                    "portlet": "module1"
+                }
+            }
+        },
+        "children": [
+            {
+                "id": "firstPage",
+                "title": "First page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1", "module2"
+                    ]
+                }
+            },
+            {
+                "id": "secondPage",
+                "title": "Second page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1"
+                    ]
+                }
+            },
+            {
+                "id": "Folder2",
+                "title": "Folder2",
+                "children": [
+                    {
+                        "id": "firstPage1",
+                        "title": "First page",
+                        "page": {
+                            "control": "SingleRun",
+                            "portlets": [
+                                "module1", "module2"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "secondPage1",
+                        "title": "Second page",
+                        "page": {
+                            "control": "SingleRun",
+                            "portlets": [
+                                "module1"
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "Folder3",
+        "title": "Folder3",
+        "children": [
+            {
+                "id": "firstPage2",
+                "title": "First page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1", "module2"
+                    ]
+                }
+            },
+            {
+                "id": "secondPage2",
+                "title": "Second page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1"
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "id": "Folder4",
+        "title": "Folder4",
+        "children": [
+            {
+                "id": "firstPage3",
+                "title": "First page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1", "module2"
+                    ]
+                }
+            },
+            {
+                "id": "secondPage3",
+                "title": "Second page",
+                "page": {
+                    "control": "SingleRun",
+                    "portlets": [
+                        "module1"
+                    ]
+                }
+            }
+        ]
+    }
+
+]

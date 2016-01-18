@@ -1,0 +1,12 @@
+{
+    "SingleRun": {
+        "title": "Run",
+        "script": "controls/singleRun.js",
+        "template": "controls/singleRun.html"
+    },
+    "RunRange": {
+        "title": "Run Range",
+        "script": "controls/runRange.js",
+        "template": "controls/runRange.html"
+    }
+}

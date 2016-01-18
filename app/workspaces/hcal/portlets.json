@@ -1,0 +1,14 @@
+[
+    {
+        "id": "module1",
+        "title": "Core: module1",
+        "script": "portlets/module1.js",
+        "template": "portlets/module1.html"
+    },
+    {
+        "id": "module2",
+        "title": "Core: module2",
+        "script": "portlets/module2.js",
+        "template": "portlets/module2.html"
+    }
+]

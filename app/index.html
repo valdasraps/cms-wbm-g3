@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CMS Web Based Monitoring</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css"-->
+    <link href="bower_components/golden-layout/src/css/goldenlayout-base.css" rel="stylesheet" type="text/css"/>
+    <link href="layout.css" rel="stylesheet" type="text/css"/>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="app.css">
+    <!--script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script-->
+</head>
+<body>
+
+    <div id="__layout_header" ng-app="LayoutModule" ng-controller="LayoutController">
+        <img id="__layout_cms_image" src="img/CMS-100.gif"/>
+        <div id="__layout_header_menu">
+            <ol class="breadcrumb">
+                <li>
+                    CMS Web-Based Monitoring
+                </li>
+                <li>
+                    <span uib-dropdown>
+                        <a href id="simple-dropdown" uib-dropdown-toggle>{{workspace.title}} <span class="caret"></span></a>
+                        <ul uib-dropdown-menu>
+                            <li ng-repeat="w in workspaces" ng-if="w.id != workspace.id" ng-click="setWorkspace(w)">
+                                <a href>{{w.title}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </li>
+                <li>
+                    <span uib-dropdown ng-repeat="(pi, pdata) in paths">
+                        <a href id="simple-dropdown" uib-dropdown-toggle>{{ pdata.selected !== undefined ? pdata.selected.title : '...' }} <span class="caret"></span></a>
+                        <ul uib-dropdown-menu>
+                            <li ng-repeat="p in pdata.path.children" 
+                                ng-if="pdata.selected === undefined || p.id !== pdata.selected.id" 
+                                ng-click="setPath(p, pi)">
+                                <a href>{{p.title}}</a>
+                            </li>
+                            <li ng-if="pdata.path.children.length > 1 || pdata.selected === undefined" role="separator" class="divider"></li>
+                            <li ng-click="newPage()">
+                                <a href>Create Page...</a>
+                            </li>
+                        </ul>
+                        <span ng-if="!$last" style="color: #ccc; content: '/ '; padding: 0 5px;"> / </span>
+                    </span>
+                </li>
+            </ol>
+        </div>
+        <div id="__layout_header_title">
+            {{page.title}}
+        </div>
+        <div id="__layout_header_menu_right">
+            <label class="btn btn-primary" ng-click="editLayout()" ng-hide="layoutEdit">Edit</label>
+            <label class="btn btn-primary" ng-click="saveLayout()" ng-show="layoutEdit">Save</label>
+            <label class="btn btn-primary" ng-click="cancelLayout()" ng-show="layoutEdit">Cancel</label>
+        </div>
+
+    </div>
+
+    <div id="__layout_wrapper">
+        <div id="__layout_desktop"></div>
+    </div>
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js" type="text/javascript"></script>
+    <script src="bower_components/oclazyload/dist/ocLazyLoad.js" type="text/javascript"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js" type="text/javascript"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/golden-layout/dist/goldenlayout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
