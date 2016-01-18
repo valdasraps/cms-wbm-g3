@@ -6,7 +6,10 @@ var app = angular
         workspacesPath: "workspaces/",
         workspacesFile: "workspaces.json",
         desktop: $("#__layout_desktop"),
-        left: $('#__layout_left')
+        left: $('#__layout_left'),
+        controlToggler: $("#__layout_control"),
+        control: $("#__layout_control div"),
+//        controlButts: $("#__layout_control_butts")
     })
     .config(['$ocLazyLoadProvider', function ($ocLazyLoadProvider) {
             $ocLazyLoadProvider.config({ debug: false });
@@ -20,12 +23,9 @@ var app = angular
 
 app.controller('LayoutController', function ($scope, $http, $ocLazyLoad, $compile, _cfg, localStorageService) {
 
-    $scope.paths = [];
-    $scope.page = undefined;
-    $scope.portlets = [];
-    $scope.controls = [];
     $scope.layout = undefined;
     $scope.layoutEdit = false;
+    $scope.showControl = false;
 
     var addPortlet = function (pdata) {
         var element = $('<li>' + pdata.title + '</li>');
@@ -52,71 +52,92 @@ app.controller('LayoutController', function ($scope, $http, $ocLazyLoad, $compil
         // TODO
     }
 
-    var loadPage = function (path) {
-        $scope.page = path;
-        var root = $scope.layout.root;
-        if (root.contentItems.length > 0) {
-            root.contentItems[0].remove();
-        }
-        root.addChild(path.page.content);
-    }
-
     $scope.editLayout = function () {
         $scope.layoutEdit = true;
-        $scope.page.page.saved = angular.copy($scope.page.page.content);
+        $scope.workspace.page.saved = angular.copy($scope.workspace.page.content);
         initLayout();
-        loadPage($scope.page);
+        loadPage($scope.workspace.page);
     }
 
     $scope.saveLayout = function () {
         $scope.layoutEdit = false;
-        $scope.page.page.content = angular.copy($scope.layout.toConfig().content[0]);
+        $scope.workspace.page.content = angular.copy($scope.layout.toConfig().content[0]);
         initLayout();
-        loadPage($scope.page);
+        loadPage($scope.workspace.page);
     }
 
     $scope.cancelLayout = function () {
         $scope.layoutEdit = false;
-        $scope.page.page.content = $scope.page.page.saved;
+        $scope.workspace.page.content = $scope.workspace.page.saved;
         initLayout();
-        loadPage($scope.page);
+        loadPage($scope.workspace.page);
+    }
+    
+    var loadPage = function (path) {
+        $scope.workspace.page = path;
+        var root = $scope.layout.root;
+        if (root.contentItems.length > 0) {
+            root.contentItems[0].remove();
+        }
+        root.addChild(path.content);
     }
     
     $scope.setPath = function (path, index) {
-        $scope.paths[index].selected = path;
-        $scope.paths = $scope.paths.slice(0, index + 1);
+        $scope.workspace.paths[index].selected = path;
+        $scope.workspace.paths = $scope.workspace.paths.slice(0, index + 1);
         if (path.children !== undefined && path.children.length > 0) {
-            $scope.paths.push({ path: path, selected: undefined });
+            $scope.workspace.paths.push({ path: path, selected: undefined });
         }
-        if (path.page !== undefined) {
+        if (path.content !== undefined) {
+            if (path.control) {
+                loadControl(path.control);
+            }
             loadPage(path);
         }
     }
 
     $scope.setWorkspace = function (workspace) {
-        console.log(workspace);
-        $scope.workspace = workspace;
-        workspace._cache = {};
-        
-        Promise.all([
-            $http.get(_cfg.workspacesPath + workspace.base + workspace.pages),
-            $http.get(_cfg.workspacesPath + workspace.base + workspace.controls),
-            $http.get(_cfg.workspacesPath + workspace.base + workspace.portlets)
-        ]).then(function (ret) {
+        if (!workspace.loaded) {
             
-            $scope.pages = ret[0].data;
-            $scope.controls = ret[1].data;
-            $scope.portlets = ret[2].data;
-            
-            $scope.paths.push({path: { children: $scope.pages}, selected: undefined});
-            $scope.setPath($scope.pages[0], 0);
+            Promise.all([
+                $http.get(workspace.baseUrl + workspace.pagesUrl),
+                $http.get(workspace.baseUrl + workspace.controlsUrl),
+                $http.get(workspace.baseUrl + workspace.portletsUrl)
+            ]).then(function (ret) {
 
-        });
+                var pages = ret[0].data;
+                angular.extend(workspace, {
+                    pages: pages,
+                    controls: ret[1].data,
+                    portlets: ret[2].data,
+                    paths: [{ path: { children: pages }, selected: undefined }],
+                    page: undefined,
+                    loaded: true,
+                    _portlet_cache: { },
+                    _control_cache: { }
+                });
+
+                $scope.workspace = workspace;
+                $scope.setPath(workspace.pages[0], 0);
+                
+            });
+            
+        } else {
+            $scope.workspace = workspace;
+        }
     }
 
     $http.get(_cfg.workspacesPath + _cfg.workspacesFile).then(function (ret) {
-        $scope.workspaces = ret.data;
-        $scope.setWorkspace($scope.workspaces[0]);
+        var workspaces = ret.data;
+        angular.forEach(workspaces, function (workspace) {
+            workspace.baseUrl = _cfg.workspacesPath + workspace.baseUrl;
+            workspace.loaded = false;
+        });
+        
+        console.log(workspaces);
+        
+        $scope.workspaces = workspaces;
+        $scope.setWorkspace(workspaces[0]);
     });
     
     var layoutDisplayConfig = {
@@ -168,15 +189,14 @@ app.controller('LayoutController', function ($scope, $http, $ocLazyLoad, $compil
         var conf = $scope.layoutEdit ? layoutEditConfig : layoutDisplayConfig;
         $scope.layout = new window.GoldenLayout(conf, _cfg.desktop);
         $scope.layout.registerComponent("portlet", function (container, state) {
-            var cached = $scope.workspace._cache[state.portlet];
+            var cached = $scope.workspace._portlet_cache[state.portlet];
             if (cached) {
                 loadPortlet(container, cached);
             } else {
-                var portlet = $scope.portlets[state.portlet];
-                var base = _cfg.workspacesPath + $scope.workspace.base;
-                $ocLazyLoad.load(base + portlet.script)
+                var portlet = $scope.workspace.portlets[state.portlet];
+                $ocLazyLoad.load($scope.workspace.baseUrl + portlet.script)
                     .then(function (data) {
-                        $http.get(base + portlet.template)
+                        $http.get($scope.workspace.baseUrl + portlet.template)
                             .then(function (html) {
                                 cached = {
                                     title: portlet.title,
@@ -184,7 +204,7 @@ app.controller('LayoutController', function ($scope, $http, $ocLazyLoad, $compil
                                     ctrl: state.portlet
                                 };
                                 loadPortlet(container, cached);
-                                $scope.workspace._cache[state.portlet] = cached;
+                                $scope.workspace._portlet_cache[state.portlet] = cached;
                             });
                     });
             }
@@ -193,5 +213,40 @@ app.controller('LayoutController', function ($scope, $http, $ocLazyLoad, $compil
     }
     
     initLayout();
+        
+    $scope.toggleControl = function () {
+        _cfg.controlToggler.slideToggle();
+    }
+        
+    var loadContent = function (container, cached) {
+        var linkingFunction = $compile(cached.html);
+        container.append(linkingFunction($scope));
+        angular.bootstrap(container[0], [ cached.ctrl ]);
+    }
+
+    var loadControl = function (cid) {
+        _cfg.control.find("div:first").remove();
+        var div = $("<div></div>").prependTo(_cfg.control);
+        var cached = $scope.workspace._control_cache[cid];
+        if (cached) {
+            loadContent(div, cached);
+        } else {
+            var control = $scope.workspace.controls[cid];
+            console.log(control);
+            $ocLazyLoad.load($scope.workspace.baseUrl + control.script)
+                .then(function (data) {
+                    $http.get($scope.workspace.baseUrl + control.template)
+                        .then(function (html) {
+                            cached = {
+                                title: control.title,
+                                html: html.data,
+                                ctrl: cid
+                            };
+                            loadContent(div, cached);
+                            $scope.workspace._control_cache[cid] = cached;
+                        });
+                });
+        }
+    };
         
 });

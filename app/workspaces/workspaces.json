@@ -2,17 +2,17 @@
     {
         "id": "core",
         "title": "CMS",
-        "base": "core/",
-        "controls": "controls.json",
-        "portlets": "portlets.json",
-        "pages": "pages.json"
+        "baseUrl": "core/",
+        "controlsUrl": "controls.json",
+        "portletsUrl": "portlets.json",
+        "pagesUrl": "pages.json"
     },
     {
         "id": "hcal",
         "title": "HCAL",
-        "base": "hcal/",
-        "controls": "controls.json",
-        "portlets": "portlets.json",
-        "pages": "pages.json"
+        "baseUrl": "hcal/",
+        "controlsUrl": "controls.json",
+        "portletsUrl": "portlets.json",
+        "pagesUrl": "pages.json"
     }
 ]

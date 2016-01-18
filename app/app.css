@@ -61,6 +61,14 @@ html, body{
     top: 55px;
 }
 
+#__layout_control {
+    position: absolute;
+    z-index: 1000;
+    top: 60px;
+    left: 45%;
+    width: 50%;
+}
+
 /*#__layout_left {
     width: 10%;
     height: 100%;

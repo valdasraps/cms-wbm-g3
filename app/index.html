@@ -34,8 +34,9 @@
                     </span>
                 </li>
                 <li>
-                    <span uib-dropdown ng-repeat="(pi, pdata) in paths">
-                        <a href id="simple-dropdown" uib-dropdown-toggle>{{ pdata.selected !== undefined ? pdata.selected.title : '...' }} <span class="caret"></span></a>
+                    <span uib-dropdown ng-repeat="(pi, pdata) in workspace.paths">
+                        <a href id="simple-dropdown" uib-dropdown-toggle>{{ pdata.selected !== undefined ? pdata.selected.title : '...' }} 
+                            <span class="caret"></span></a>
                         <ul uib-dropdown-menu>
                             <li ng-repeat="p in pdata.path.children" 
                                 ng-if="pdata.selected === undefined || p.id !== pdata.selected.id" 
@@ -53,16 +54,27 @@
             </ol>
         </div>
         <div id="__layout_header_title">
-            {{page.title}}
+            {{workspace.page.title}}
         </div>
         <div id="__layout_header_menu_right">
             <label class="btn btn-primary" ng-click="editLayout()" ng-hide="layoutEdit">Edit</label>
             <label class="btn btn-primary" ng-click="saveLayout()" ng-show="layoutEdit">Save</label>
             <label class="btn btn-primary" ng-click="cancelLayout()" ng-show="layoutEdit">Cancel</label>
+            <label class="btn btn-primary" ng-click="toggleControl()">Select</label>
         </div>
-
+<!--        <div id="__layout_control_butts" style="display: none">
+            <hr>
+            <div>
+                <label class="btn btn-primary" ng-click="applyControl()">Apply</label>
+                <label class="btn btn-primary" ng-click="toggleControl()">Cancel</label>
+            </div>
+        </div>-->
     </div>
 
+    <div id="__layout_control" style="display: none">
+        <div class="well well-lg" style="box-shadow: 3px 3px 1px rgba( 0, 0, 0, 0.4 );"></div>
+    </div>
+    
     <div id="__layout_wrapper">
         <div id="__layout_desktop"></div>
     </div>
