@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('module2', []).controller('c1', function($scope) {
+angular.module('WbmModule').controller('core-m2', function($scope) {
     
-    var count = 0;
-    $scope.message = "Labas No" + count + "!";
+    $scope.count = undefined;
     
-    $scope.refresh = function (data) {
-        $scope.count += 1;
-    }
+    $scope.$on('initPortlet', function(e, data) {
+        $scope.count = 1000;
+    });
+
+    $scope.$on('applyPortlet', function(e, data) {
+        $scope.count--;
+    });
     
 });

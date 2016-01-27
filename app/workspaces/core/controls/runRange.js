@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('RunRange', []).controller('c1', function($scope) {
+angular.module('WbmModule').controller('RunRange', function($scope) {
     
     $scope.message = "Labas dar kartą!";
     

@@ -1,5 +1,19 @@
-<div ng-controller="c1">
-    <input type="text" ng-model="message"/>
-    <br/>
-    {{message}}
+<div ng-controller="SingleRun">
+    <form id="form">       
+        <div class="row">
+            <div class="col-md-8">
+            <input type="number" class="form-control" 
+                   ng-model="data.runnumber" 
+                   typeahead-editable="false"
+                   uib-typeahead="run for run in runNumbers | filter:$viewValue | limitTo:8">
+            </div>
+            <div class="col-md-4">
+            <div class="btn-group">
+                <label class="btn btn-primary" ng-model="data.runnumber" uib-btn-radio="getPrevRun()" ng-disabled="!getPrevRun()">Previous</label>
+                <label class="btn btn-primary" ng-model="data.runnumber" uib-btn-radio="getNextRun()" ng-disabled="!getNextRun()">Next</label>
+                <label class="btn btn-primary" ng-model="data.runnumber" uib-btn-radio="getLastRun()" ng-disabled="!getLastRun()">Last</label>
+            </div>
+            </div>
+        </div>
+    </form>
 </div>

@@ -1,18 +1,12 @@
 [
     {
         "id": "core",
-        "title": "CMS",
-        "baseUrl": "core/",
-        "controlsUrl": "controls.json",
-        "portletsUrl": "portlets.json",
-        "pagesUrl": "pages.json"
+        "title": "Core",
+        "baseUrl": "core/"
     },
     {
         "id": "hcal",
         "title": "HCAL",
-        "baseUrl": "hcal/",
-        "controlsUrl": "controls.json",
-        "portletsUrl": "portlets.json",
-        "pagesUrl": "pages.json"
+        "baseUrl": "hcal/"
     }
 ]
