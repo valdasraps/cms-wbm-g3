@@ -1,13 +1,12 @@
 logs/*
 !.gitkeep
 node_modules/
-bower_components/
+app/components/
 tmp
 .DS_Store
 .idea
 /nbproject/private/
 app/npm-debug.log
-.bowerrc
 .jshintrc
 .travis.yml
 e2e-tests/

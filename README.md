@@ -16,7 +16,6 @@ Install/update bower components
 ```
 cd cms-wbm-g3
 bower install
-bower update
 sudo npm start
 ```
 
@@ -28,3 +27,10 @@ npm start
 ```
 
 Point browser to [http://localhost:8000/app](http://localhost:8000/app)
+
+### Other
+
+Update bower components
+```
+bower update
+```
