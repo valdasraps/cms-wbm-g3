@@ -17,6 +17,7 @@ Install/update bower components
 cd cms-wbm-g3
 bower install
 bower update
+sudo npm start
 ```
 
 ### Running
