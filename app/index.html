@@ -62,9 +62,9 @@
         
         <div id="__layout_header_menu_right">
             <label class="btn btn-primary" ng-click="toggleControl()">Select</label>
-            <label class="btn btn-primary" ng-click="editLayout()" ng-hide="layoutEdit">Edit</label>
-            <label class="btn btn-primary" ng-click="saveLayout()" ng-show="layoutEdit">Save</label>
-            <label class="btn btn-primary" ng-click="cancelLayout()" ng-show="layoutEdit">Cancel</label>
+            <label class="btn btn-primary" ng-click="editLayout()" ng-hide="layout.config.settings.editable">Edit</label>
+            <label class="btn btn-primary" ng-click="saveLayout()" ng-show="layout.config.settings.editable">Save</label>
+            <label class="btn btn-primary" ng-click="cancelLayout()" ng-show="layout.config.settings.editable">Cancel</label>
         </div>
     </div>
 
@@ -72,8 +72,9 @@
         <div class="well well-lg" style="box-shadow: 3px 3px 1px rgba( 0, 0, 0, 0.4 );">
             <div id="__layout_control_butts">
                 <hr>
-                <label id="__layout_control_apply" class="btn btn-primary" ng-click="applyControl()">Apply</label>
-                <label id="__layout_control_cancel" class="btn btn-primary" ng-click="cancelControl()">Cancel</label>
+                <label class="btn btn-primary" ng-click="applyControl(true)">OK</label>
+                <label class="btn btn-primary" ng-click="applyControl(false)">Apply</label>
+                <label class="btn btn-primary" ng-click="toggleControl()">Close</label>
             </div>
         </div>
     </div>

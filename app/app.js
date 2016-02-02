@@ -21,7 +21,6 @@ var app = angular
     .controller('LayoutCtrl', function ($scope, $http, $ocLazyLoad, $compile, _cfg, localStorageService) {
     
     $scope.layout = undefined;
-    $scope.layoutEdit = false;
     $scope.showControl = false;
     
     $http.get(_cfg.baseUrl + "workspaces.json").then(function (ret) {
@@ -97,24 +96,20 @@ var app = angular
     //*********************************
     
     $scope.editLayout = function () {
-        $scope.layoutEdit = true;
         $scope.workspace.page.saved = angular.copy($scope.workspace.page.content);
-        initLayout();
-        loadPage($scope.workspace.page);
+        $scope.layout.setEditable(true);
     }
 
     $scope.saveLayout = function () {
-        $scope.layoutEdit = false;
         $scope.workspace.page.content = angular.copy($scope.layout.toConfig().content[0]);
-        initLayout();
-        loadPage($scope.workspace.page);
+        $scope.layout.setEditable(false);
     }
 
     $scope.cancelLayout = function () {
-        $scope.layoutEdit = false;
         $scope.workspace.page.content = $scope.workspace.page.saved;
-        initLayout();
+        $scope.layout.setEditable(false);
         loadPage($scope.workspace.page);
+        $scope.applyControl(false);
     }
     
 //    var addPortlet = function (pdata) {
@@ -142,51 +137,12 @@ var app = angular
 //        // TODO
 //    }
 
-    var layoutDisplayConfig = {
-        settings: {
-            isCloseable: false,
-            hasHeaders: true,
-            constrainDragToContainer: true,
-            reorderEnabled: false,
-            resizeEnabled: false,
-            selectionEnabled: true,
-            popoutWholeStack: false,
-            blockedPopoutsThrowError: true,
-            closePopoutsOnUnload: true,
-            showPopoutIcon: false,
-            showMaximiseIcon: true,
-            showCloseIcon: false
-        }, 
-        dimensions: {
-            borderWidth: 10
-        }, content: [ ]
-    };
-
-    var layoutEditConfig = {
-        settings: {
-            isCloseable: true,
-            hasHeaders: true,
-            constrainDragToContainer: true,
-            reorderEnabled: true,
-            resizeEnabled: true,
-            selectionEnabled: true,
-            popoutWholeStack: false,
-            blockedPopoutsThrowError: true,
-            closePopoutsOnUnload: true,
-            showPopoutIcon: false,
-            showMaximiseIcon: true,
-            showCloseIcon: true
-        }, 
-        dimensions: {
-            borderWidth: 10
-        }, content: [ ]
-    };
-
-    var loadPortlet = function (container, cached) {
+    var drawPortlet = function (container, cached) {
         container.setTitle(cached.title);
         var linkingFunction = $compile(cached.html);
         var el = container.getElement();
         var portlet = linkingFunction($scope);
+        $scope.$broadcast('initPortlet');
         el.append(portlet);
     }
 
@@ -194,12 +150,20 @@ var app = angular
         if ($scope.layout) {
             $scope.layout.destroy();
         }
-        var conf = $scope.layoutEdit ? layoutEditConfig : layoutDisplayConfig;
+        var conf = {
+            settings: {
+                showPopoutIcon: false,
+                editable: false
+            }, 
+            dimensions: {
+                borderWidth: 10
+            }, content: [ ]
+        };
         $scope.layout = new window.GoldenLayout(conf, _cfg.desktop);
         $scope.layout.registerComponent("portlet", function (container, state) {
             var cached = $scope.workspace._portlet_cache[state.portlet];
             if (cached) {
-                loadPortlet(container, cached);
+                drawPortlet(container, cached);
             } else {
                 var portlet = $scope.workspace.portlets[state.portlet];
                 $ocLazyLoad.load($scope.workspace.baseUrl + portlet.script)
@@ -210,7 +174,7 @@ var app = angular
                                     title: portlet.title,
                                     html: html.data
                                 };
-                                loadPortlet(container, cached);
+                                drawPortlet(container, cached);
                                 $scope.workspace._portlet_cache[state.portlet] = cached;
                             });
                     });
@@ -228,31 +192,39 @@ var app = angular
     var getControlScope = function () {
         return angular.element(_cfg.control.find("#__layout_control_div [ng-controller] :first")).scope();
     }
-        
-    $scope.applyControl = function () {
-        $scope.$broadcast('applyPortlet', getControlScope().onApply());
-        $scope.toggleControl();
-    }
+    
+    $scope.doInit = function () { }
+    
+    $scope.doShow = function () { }
+    
+    $scope.doHide = function () { }
     
     $scope.onApply = function () { return {} }
     
-    $scope.cancelControl = function () {
-        getControlScope().onCancel();
-        $scope.toggleControl();
+    $scope.applyControl = function (hide) {
+        $scope.$broadcast('applyPortlet', getControlScope().onApply());
+        if (hide) $scope.toggleControl();
     }
 
-    $scope.onCancel = function () { }
-        
-    $scope.toggleControl = function () {
-        _cfg.controlToggler.slideToggle();
+    $scope.closeControl = function () {
+        getControlScope().doCancel();
+        $scope.toggleControl();
     }
     
+    $scope.toggleControl = function() {
+        var isvisible = _cfg.controlToggler.is(':visible');
+        _cfg.controlToggler.slideToggle({
+            complete: isvisible ? getControlScope().doHide() : getControlScope().doShow()
+        });
+    }
+
     var drawControl = function(div, cached) {
         var linkingFunction = $compile(cached.html);
         div.append(linkingFunction($scope));
-        $scope.$broadcast('initPortlet', getControlScope().onInit());
+        getControlScope().doInit();
+        $scope.toggleControl();
     }
-
+    
     var loadControl = function (cid) {
         _cfg.control.find("#__layout_control_div").remove();
         var div = $("<div id=\"__layout_control_div\"></div>").prependTo(_cfg.control);
@@ -274,10 +246,6 @@ var app = angular
                         });
                 });
         }
-        
-        _cfg.controlToggler.slideDown();
     };
-    
-    $scope.onInit = function () { return {} }
         
 });

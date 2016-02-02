@@ -5,19 +5,22 @@ angular.module('WbmModule').controller('SingleRun', function ($scope, $http) {
     $scope.data = {
         runnumber: 0
     };
+
+    // Called on control load; return void
+    $scope.doInit = function () { console.log("SingleRun: init"); }
     
-    $scope.onInit = function () {
-        return $scope.data;
-    }
+    // Called then control open; return void
+    $scope.doShow = function () { console.log("SingleRun: show"); }
     
+    // Called then control hide; return void
+    $scope.doHide = function () { console.log("SingleRun: hide"); }
+
+    // Called then apply pressed; return selection
     $scope.onApply = function () {
+        console.log("SingleRun: apply");
         return $scope.data;
     }
 
-    $scope.onCancel = function () {
-        return { };
-    }
-    
     $scope.runNumbers = [
         263915,263907,263900,263899,263893,263892,263889,263858,263841,263824,263823,263821,263820,263797,263796,263795,263794,263793,263787,263784,263781,263774,263759,263758,263757,263755,263752,263750,263746,263745,263744,263743,
         263742,263741,263740,263739,263738,263737,263736,263735,263734,263733,263732,263731,263730,263729,263728,263727,263726,263725,263724,263723,263722,263721,263720,263719,263718,263717,263716,263715,263714,263713,263712,263711,
